@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Roll the Dices</title>
+</head>
+<style>
+      body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+    
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+    }
+    
+    .player {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      width: 200px;
+    }
+    
+    #rollButton {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      align-self: center;
+    }
+    
+    #rollButton:hover {
+      background-color: #0056b3;
+    }
+    
+    .result {
+      font-size: 24px;
+      margin-top: 20px;
+      text-align: center;
+    }
+    
+    .timer {
+      font-size: 18px;
+      margin-top: 10px;
+      color: #888;
+    }
+</style>
+<body>
+  <div class="game-container">
+    <div class="player">
+      <input type="text" id="player1Name" placeholder="Player 1 Name" />
+      <button id="rollButton" onclick="rollDices()">Roll the Dices</button>
+    </div>
+    <div class="player">
+      <input type="text" id="player2Name" placeholder="Player 2 Name" />
+    </div>
+    <div class="result" id="result"></div>
+    <div class="timer" id="timer"></div>
+  </div>
+  <script src="script.js"></script>
+  <audio id="bellSound" src="bell.mp3"></audio>
+</body>
+</html>
+<script>
+const actionWords = [
+    "Kiss", "Suck", "Lick", "Rub", "Tickle",
+    "Tease", "Touch", "Spank", "Bite",
+    "Nibble", "Blindfold", "Massage", "Caress", "Stroke", "Blow", "Taste", 
+];
+
+const modeWords = [
+    "Boobs", "Thighs", "Inner thighs", "Feet", "Neck",
+    "Ear", "Hands", "Back", "Ass", "Dick", "Navel", "Lips", "Pussy", "Toes", "Finger"
+];
+
+let currentPlayer = 1;
+let timer;
+
+function rollDices() {
+    const player1Name = document.getElementById('player1Name').value;
+    const player2Name = document.getElementById('player2Name').value;
+    const resultElement = document.getElementById('result');
+    const timerElement = document.getElementById('timer');
+
+    if (currentPlayer === 1) {
+        const randomAction = getRandomAction();
+        const randomMode = getRandomMode();
+        resultElement.textContent = `${player1Name}: ${randomAction} ${randomMode}`;
+        currentPlayer = 2;
+        // timerElement.textContent = `${player1Name}'s Turn`;
+        startTimer(30);
+    } else {
+        const randomAction = getRandomAction();
+        const randomMode = getRandomMode();
+        resultElement.textContent = `${player2Name}: ${randomAction} ${randomMode}`;
+        currentPlayer = 1;
+        // timerElement.textContent = `${player2Name}'s Turn`;
+        startTimer(30);
+    }
+}
+
+function getRandomAction() {
+    const randomIndex = Math.floor(Math.random() * actionWords.length);
+    return actionWords[randomIndex];
+}
+
+function getRandomMode() {
+    const randomIndex = Math.floor(Math.random() * modeWords.length);
+    return modeWords[randomIndex];
+}
+
+function startTimer(seconds) {
+    clearInterval(timer);
+    const timerElement = document.getElementById('timer');
+    let remainingTime = seconds;
+
+    timer = setInterval(() => {
+        if (remainingTime === 0) {
+            clearInterval(timer);
+            timerElement.textContent = 'Time\'s Up!';
+            document.getElementById('bellSound').play();
+            setTimeout(() => {
+                timerElement.textContent = '';
+                document.getElementById('result').textContent = '';
+            }, 2000);
+        } else {
+            timerElement.textContent = `${remainingTime} seconds left`;
+            remainingTime--;
+        }
+    }, 1000);
+}
+</script>
